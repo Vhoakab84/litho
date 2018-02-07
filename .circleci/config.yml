@@ -20,7 +20,7 @@ jobs:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "gradle.properties" }}
       - run:
           name: Install Buck Dependencies (TODO: Move this to Docker container)
-          command: apt-get update -qq && apt-get install -y ant
+          command: "apt-get update -qq && apt-get install -y ant"
       - run:
           name: Set up Buck and Android
           command: |
