@@ -3,7 +3,6 @@ jobs:
   build:
     environment:
       TERM: 'dumb'
-      PATH: "/home/ubuntu/buck/bin:$PATH"
       ANDROID_HOME: '/home/ubuntu/android-sdk'
       ANDROID_NDK_REPOSITORY: "/home/ubuntu/android-ndk"
       JVM_OPTS: -Xmx3200m
@@ -22,8 +21,9 @@ jobs:
       - run:
           name: Set up Buck and Android
           command: |
-            if [[ ! -e /home/ubuntu/buck ]]; then git clone https://github.com/facebook/buck.git /home/ubuntu/buck; fi
-            cd /home/ubuntu/buck && ant
+            if [[ ! -e $HOME/buck ]]; then git clone https://github.com/facebook/buck.git $HOME/buck; fi
+            export PATH="$HOME/buck/bin:$PATH"
+            cd $HOME/buck && ant
             buck --version
             source scripts/circle-ci-android-setup.sh && installAndroidSDK
             buck fetch //...
