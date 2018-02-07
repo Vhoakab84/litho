@@ -19,6 +19,9 @@ jobs:
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "gradle.properties" }}
       - run:
+          name: Install Buck Dependencies (TODO: Move this to Docker container)
+          command: apt-get update -qq && apt-get install -y ant
+      - run:
           name: Set up Buck and Android
           command: |
             if [[ ! -e $HOME/buck ]]; then git clone https://github.com/facebook/buck.git $HOME/buck; fi
