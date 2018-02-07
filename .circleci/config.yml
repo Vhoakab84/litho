@@ -12,49 +12,43 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Set up keys
-        command: "[ -n \"$KEY\" ] && openssl aes-256-cbc -d -in scripts/setup-keys.enc -k $KEY >> gradle.properties || true"
+          name: Set up keys
+          command: "[ -n \"$KEY\" ] && openssl aes-256-cbc -d -in scripts/setup-keys.enc -k $KEY >> gradle.properties || true"
       - run:
-        name: Unset key
-        command: export KEY="<unset>"
+          name: Unset key
+          command: "export KEY=\"<unset>\""
       - restore_cache:
-        key: jars-{{ checksum "build.gradle" }}-{{ checksum  "gradle.properties" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "gradle.properties" }}
       - run:
-        name: Set up Buck and Android
-        command: |
-          if [[ ! -e /home/ubuntu/buck ]]; then git clone https://github.com/facebook/buck.git /home/ubuntu/buck; fi
-          cd /home/ubuntu/buck && ant
-          buck --version
-          source scripts/circle-ci-android-setup.sh && installAndroidSDK
-          buck fetch //...
+          name: Set up Buck and Android
+          command: |
+            if [[ ! -e /home/ubuntu/buck ]]; then git clone https://github.com/facebook/buck.git /home/ubuntu/buck; fi
+            cd /home/ubuntu/buck && ant
+            buck --version
+            source scripts/circle-ci-android-setup.sh && installAndroidSDK
+            buck fetch //...
       - run:
-        name: Gradle Dependencies
-        command: ./gradlew androidDependencies
+          name: Gradle Dependencies
+          command: ./gradlew androidDependencies
       - run:
-        name: Buck Dependencies
-        command: buck fetch //...
+          name: Buck Dependencies
+          command: buck fetch //...
       - save_cache:
-        paths:
-          - ~/.gradle
-          - ~/buck
-          - ~/android-sdk
-        key: jars-{{ checksum "build.gradle" }}-{{ checksum  "gradle.properties" }}
+          paths:
+            - ~/.gradle
+            - ~/buck
+            - ~/android-sdk
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "gradle.properties" }}
       - run:
-        name: Run Tests
-        command: |
-          buck build sample
-          buck build sample-barebones
-          buck build sample-codelab
-          buck test litho-it/src/test/...
-          buck test litho-it-powermock/src/test/...
-          ./gradlew test
-          ./gradlew :sample-kotlin:assembleDebug
-
+          name: Run Tests
+          command: |
+            buck build sample
+            buck build sample-barebones
+            buck build sample-codelab
+            buck test litho-it/src/test/...
+            buck test litho-it-powermock/src/test/...
+            ./gradlew test
+            ./gradlew :sample-kotlin:assembleDebug
       - run:
-        name: Publish Snapshot
-        command: scripts/circle-ci-publish-snapshot.sh
-      # - store_test_results:
-      #   path: ???
-        # # Collect the JUnit reports
-        # - mkdir -p $CIRCLE_TEST_REPORTS/junit/
-        # - find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+          name: Publish Snapshot
+          command: scripts/circle-ci-publish-snapshot.sh
