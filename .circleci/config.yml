@@ -26,7 +26,7 @@ jobs:
           command: |
             if [[ ! -e $HOME/buck ]]; then git clone https://github.com/facebook/buck.git $HOME/buck; fi
             export PATH="$HOME/buck/bin:$PATH"
-            cd $HOME/buck && ant
+            pushd $HOME/buck && ant; popd
             buck --version
             source scripts/circle-ci-android-setup.sh && installAndroidSDK
             buck fetch //...
