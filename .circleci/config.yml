@@ -29,13 +29,12 @@ jobs:
             pushd $HOME/buck && ant; popd
             buck --version
             source scripts/circle-ci-android-setup.sh && installAndroidSDK
-            buck fetch //...
       - run:
           name: Gradle Dependencies
           command: ./gradlew androidDependencies
       - run:
           name: Buck Dependencies
-          command: buck fetch //...
+          command: $HOME/buck/bin/buck fetch //...
       - save_cache:
           paths:
             - ~/.gradle
@@ -45,6 +44,7 @@ jobs:
       - run:
           name: Run Tests
           command: |
+            export PATH="$HOME/buck/bin:$PATH"
             buck build sample
             buck build sample-barebones
             buck build sample-codelab
