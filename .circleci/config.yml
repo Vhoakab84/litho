@@ -3,8 +3,8 @@ jobs:
   build:
     environment:
       TERM: 'dumb'
-      ANDROID_HOME: '/home/ubuntu/android-sdk'
-      ANDROID_NDK_REPOSITORY: "/home/ubuntu/android-ndk"
+      ANDROID_HOME: '/home/circleci/android-sdk'
+      ANDROID_NDK_REPOSITORY: "/home/circleci/android-ndk"
       JVM_OPTS: -Xmx3200m
     docker:
       - image: circleci/android:api-27-alpha
