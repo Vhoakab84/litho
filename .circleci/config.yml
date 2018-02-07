@@ -20,7 +20,7 @@ jobs:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "gradle.properties" }}
       - run:
           name: Install buck dependencies
-          command: "apt-get update -qq && apt-get install -y ant"
+          command: "sudo apt-get update -qq && sudo apt-get install -y ant"
       - run:
           name: Set up Buck and Android
           command: |
